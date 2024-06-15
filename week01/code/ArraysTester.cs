@@ -1,16 +1,20 @@
-public static class ArraysTester {
+public static class ArraysTester
+{
     /// <summary>
     /// Entry point for the tests
     /// </summary>
-    public static void Run() {
+    public static void Run()
+    {
         // Sample Test Cases (may not be comprehensive)
         Console.WriteLine("\n=========== PROBLEM 1 TESTS ===========");
         double[] multiples = MultiplesOf(7, 5);
         Console.WriteLine($"<double>{{{string.Join(',', multiples)}}}"); // <double>{7, 14, 21, 28, 35}
         multiples = MultiplesOf(1.5, 10);
-        Console.WriteLine($"<double>{{{string.Join(',', multiples)}}}"); // <double>{1.5, 3.0, 4.5, 6.0, 7.5, 9.0, 10.5, 12.0, 13.5, 15.0}
+        Console.WriteLine(
+            $"<double>{{{string.Join(',', multiples)}}}"); // <double>{1.5, 3.0, 4.5, 6.0, 7.5, 9.0, 10.5, 12.0, 13.5, 15.0}
         multiples = MultiplesOf(-2, 10);
-        Console.WriteLine($"<double>{{{string.Join(',', multiples)}}}"); // <double>{-2, -4, -6, -8, -10, -12, -14, -16, -18, -20}
+        Console.WriteLine(
+            $"<double>{{{string.Join(',', multiples)}}}"); // <double>{-2, -4, -6, -8, -10, -12, -14, -16, -18, -20}
 
         Console.WriteLine("\n=========== PROBLEM 2 TESTS ===========");
         List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -26,6 +30,7 @@ public static class ArraysTester {
         RotateListRight(numbers, 9);
         Console.WriteLine($"<List>{{{string.Join(',', numbers)}}}"); // <List>{1, 2, 3, 4, 5, 6, 7, 8, 9}
     }
+
     /// <summary>
     /// This function will produce an array of size 'length' starting with 'number' followed by multiples of 'number'.  For 
     /// example, MultiplesOf(7, 5) will result in: {7, 14, 21, 28, 35}.  Assume that length is a positive
@@ -34,12 +39,18 @@ public static class ArraysTester {
     /// <returns>array of doubles that are the multiples of the supplied number</returns>
     private static double[] MultiplesOf(double number, int length)
     {
-        // TODO Problem 1 Start
-        // Remember: Using comments in your program, write down your process for solving this problem
-        // step by step before you write the code. The plan should be clear enough that it could
-        // be implemented by another person.
+        // Create an array of doubles with the specified length
+        double[] multiples = new double[length];
 
-        return new double[0]; // replace this return statement with your own
+        // Populate the array with multiples of the given number
+        for (int i = 0; i < length; i++)
+        {
+            // Calculate the i-th multiple of the given number
+            multiples[i] = number * (i + 1);
+        }
+
+        // Return the array
+        return multiples;
     }
     
     /// <summary>
@@ -52,10 +63,28 @@ public static class ArraysTester {
     /// </summary>
     private static void RotateListRight(List<int> data, int amount)
     {
-        // TODO Problem 2 Start
-        // Remember: Using comments in your program, write down your process for solving this problem
-        // step by step before you write the code. The plan should be clear enough that it could
-        // be implemented by another person.
+        // Make sure the amount is within the bounds of the list length
+        amount = amount % data.Count;
 
+        // If amount is 0, no need to rotate
+        if (amount == 0) return;
+
+        // Create a new list to hold the part that will be rotated to the front
+        List<int> rotatedPart = new List<int>();
+
+        // Add the last 'amount' elements to the new list
+        for (int i = data.Count - amount; i < data.Count; i++)
+        {
+            rotatedPart.Add(data[i]);
+        }
+
+        // Remove the last 'amount' elements from the original list
+        data.RemoveRange(data.Count - amount, amount);
+
+        // Insert the rotated part at the beginning of the original list
+        for (int i = rotatedPart.Count - 1; i >= 0; i--)
+        {
+            data.Insert(0, rotatedPart[i]);
+        }
     }
 }
