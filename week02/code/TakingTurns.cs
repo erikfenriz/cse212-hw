@@ -82,7 +82,14 @@
         // Expected Result: Error message should be displayed
         Console.WriteLine("Test 5");
         players = new TakingTurnsQueue();
-        players.GetNextPerson();
+        try
+        {
+            players.GetNextPerson();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
         // Defect(s) Found:
     }
 }
