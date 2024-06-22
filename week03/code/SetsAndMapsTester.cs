@@ -29,7 +29,7 @@ public static class SetsAndMapsTester {
         // Problem 2: Degree Summary
         // Sample Test Cases (may not be comprehensive) 
         Console.WriteLine("\n=========== Census TESTS ===========");
-        Console.WriteLine(string.Join(", ", SummarizeDegrees("census.txt")));
+        Console.WriteLine(string.Join(", ", SummarizeDegrees("../../../census.txt"))); // had to change the path string due to error
         // Results may be in a different order:
         // <Dictionary>{[Bachelors, 5355], [HS-grad, 10501], [11th, 1175],
         // [Masters, 1723], [9th, 514], [Some-college, 7291], [Assoc-acdm, 1067],
@@ -107,10 +107,29 @@ public static class SetsAndMapsTester {
     /// that there were no duplicates) and therefore should not be displayed.
     /// </summary>
     /// <param name="words">An array of 2-character words (lowercase, no duplicates)</param>
-    private static void DisplayPairs(string[] words) {
-        // To display the pair correctly use something like:
-        // Console.WriteLine($"{word} & {pair}");
-        // Each pair of words should displayed on its own line.
+    private static void DisplayPairs(string[] words)
+    {
+        // store the words
+        HashSet<string> wordSet = new HashSet<string>();
+        
+        // iterate through each word
+        foreach (var word in words)
+        {
+            // create its reversed version
+            var reversed = new string(word.Reverse().ToArray());
+            
+            // check for reversed version
+            if (wordSet.Contains(reversed))
+            {
+                // pair found
+                Console.WriteLine($"{word} & {reversed}");
+            }
+            else
+            {
+                // add word to the set
+                wordSet.Add(word);
+            }
+        }
     }
 
     /// <summary>
@@ -127,11 +146,30 @@ public static class SetsAndMapsTester {
     /// #############
     /// # Problem 2 #
     /// #############
-    private static Dictionary<string, int> SummarizeDegrees(string filename) {
+    private static Dictionary<string, int> SummarizeDegrees(string filename)
+    {
+        // initialize an empty Dictionary
         var degrees = new Dictionary<string, int>();
-        foreach (var line in File.ReadLines(filename)) {
-            var fields = line.Split(",");
-            // Todo Problem 2 - ADD YOUR CODE HERE
+        // iterate through each line of the file
+        foreach (var line in File.ReadLines(filename))
+        {
+            // split it into fields
+            var fields = line.Split(',');
+            if (fields.Length >= 4)
+            {
+                // extract the education level
+                string degree = fields[3];
+                if (degrees.ContainsKey(degree))
+                {
+                    // if exists, increment the count
+                    degrees[degree]++;
+                }
+                else
+                {
+                    // if not, initialize with 1
+                    degrees[degree] = 1;
+                }
+            }
         }
 
         return degrees;
@@ -156,9 +194,41 @@ public static class SetsAndMapsTester {
     /// #############
     /// # Problem 3 #
     /// #############
-    private static bool IsAnagram(string word1, string word2) {
-        // Todo Problem 3 - ADD YOUR CODE HERE
-        return false;
+    private static bool IsAnagram(string word1, string word2)
+    {
+        // Remove spaces and convert to lowercase
+        word1 = word1.Replace(" ", "").ToLower();
+        word2 = word2.Replace(" ", "").ToLower();
+
+        // If lengths are different, they can't be anagrams
+        if (word1.Length != word2.Length)
+            return false;
+
+        // Create a dictionary to store character counts
+        Dictionary<char, int> charCount = new Dictionary<char, int>();
+
+        // Count characters in word1
+        foreach (char c in word1)
+        {
+            if (charCount.ContainsKey(c))
+                charCount[c]++;
+            else
+                charCount[c] = 1;
+        }
+
+        // Compare with word2
+        foreach (char c in word2)
+        {
+            if (!charCount.ContainsKey(c))
+                return false;
+        
+            charCount[c]--;
+            if (charCount[c] == 0)
+                charCount.Remove(c);
+        }
+
+        // If the dictionary is empty, all characters matched
+        return charCount.Count == 0;
     }
 
     /// <summary>
@@ -220,7 +290,8 @@ public static class SetsAndMapsTester {
     /// https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
     /// 
     /// </summary>
-    private static void EarthquakeDailySummary() {
+    private static void EarthquakeDailySummary()
+    {
         const string uri = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
         using var client = new HttpClient();
         using var getRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
@@ -231,9 +302,22 @@ public static class SetsAndMapsTester {
 
         var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(json, options);
 
-        // TODO:
-        // 1. Add code in FeatureCollection.cs to describe the JSON using classes and properties 
-        // on those classes so that the call to Deserialize above works properly.
-        // 2. Add code below to print out each place a earthquake has happened today and its magitude.
+        // Check for valid earthquake data 
+        if (featureCollection?.Features != null)
+        {
+            // iterate through earthquakes
+            foreach (var feature in featureCollection.Features)
+            {
+                // check for property
+                if (feature.Properties != null)
+                {
+                    Console.WriteLine($"{feature.Properties.Place} - Mag {feature.Properties.Mag:F2}");
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine("No earthquake data available.");
+        }
     }
 }

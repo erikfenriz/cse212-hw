@@ -14,49 +14,98 @@
 /// If there is a wall, then display "Can't go that way!".  If there is no wall,
 /// then the 'currX' and 'currY' values should be changed.
 /// </summary>
-public class Maze {
+public class Maze
+{
+    // Dictionary to store the maze layout
     private readonly Dictionary<ValueTuple<int, int>, bool[]> _mazeMap;
+    // Current x and y coordinates
     private int _currX = 1;
     private int _currY = 1;
 
-    public Maze(Dictionary<ValueTuple<int, int>, bool[]> mazeMap) {
+    // initialize the maze with a given map
+    public Maze(Dictionary<ValueTuple<int, int>, bool[]> mazeMap)
+    {
         _mazeMap = mazeMap;
     }
 
-    // Todo Maze Problem - ADD YOUR CODE HERE
     /// <summary>
     /// Check to see if you can move left.  If you can, then move.  If you
     /// can't move, then display "Can't go that way!"
     /// </summary>
-    public void MoveLeft() {
-        // FILL IN CODE
+    public void MoveLeft()
+    {
+        // safely attempt to get the directions 
+        if (_mazeMap.TryGetValue((_currX, _currY), out bool[] directions) && directions[0])
+        {
+            // if left movement is allowed, decrease x coordinate
+            _currX--;
+        }
+        else
+        {
+            // inform if movement not allowed
+            Console.WriteLine("Can't go that way!");
+        }
     }
 
     /// <summary>
     /// Check to see if you can move right.  If you can, then move.  If you
     /// can't move, then display "Can't go that way!"
     /// </summary>
-    public void MoveRight() {
-        // FILL IN CODE
+    public void MoveRight()
+    {
+        // safely attempt to get the directions 
+        if (_mazeMap.TryGetValue((_currX, _currY), out bool[] directions) && directions[1])
+        {
+            // if right movement is allowed, increase x coordinate
+            _currX++;
+        }
+        else
+        {
+            // inform if movement not allowed
+            Console.WriteLine("Can't go that way!");
+        }
     }
 
     /// <summary>
     /// Check to see if you can move up.  If you can, then move.  If you
     /// can't move, then display "Can't go that way!"
     /// </summary>
-    public void MoveUp() {
-        // FILL IN CODE
+    public void MoveUp()
+    {
+        // safely attempt to get the directions 
+        if (_mazeMap.TryGetValue((_currX, _currY), out bool[] directions) && directions[2])
+        {
+            // if up movement is allowed, decrease y coordinate
+            _currY--;
+        }
+        else
+        {
+            // inform if movement not allowed
+            Console.WriteLine("Can't go that way!");
+        }
     }
 
     /// <summary>
     /// Check to see if you can move down.  If you can, then move.  If you
     /// can't move, then display "Can't go that way!"
     /// </summary>
-    public void MoveDown() {
-        // FILL IN CODE
+    public void MoveDown()
+    {
+        // safely attempt to get the directions 
+        if (_mazeMap.TryGetValue((_currX, _currY), out bool[] directions) && directions[3])
+        {
+            // if down movement is allowed, increase y coordinate
+            _currY++;
+        }
+        else
+        {
+            // inform if movement not allowed
+            Console.WriteLine("Can't go that way!");
+        }
     }
 
-    public void ShowStatus() {
+    public void ShowStatus()
+    {
         Console.WriteLine($"Current location (x={_currX}, y={_currY})");
     }
 }
